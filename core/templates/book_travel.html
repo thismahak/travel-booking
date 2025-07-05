@@ -1,0 +1,61 @@
+
+
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Book Travel{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card shadow border-0 p-4 bg-white">
+      <h3 class="mb-4 text-center text-primary">🎟️ Confirm Your Booking</h3>
+
+      <!--  Travel Summary -->
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Type:</strong></span> <span>{{ travel.type }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>From:</strong> {{ travel.source }}</span>
+          <span><strong>To:</strong> {{ travel.destination }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Date & Time:</strong></span> 
+          <span>{{ travel.date_time|date:"M d, Y – h:i A" }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Price per Seat:</strong></span> 
+          <span>₹{{ travel.price }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Available Seats:</strong></span> 
+          <span>{{ travel.available_seats }}</span>
+        </li>
+      </ul>
+
+      <!--  Booking Form -->
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label">{{ field.label }}</label>
+           {{ field|add_class:"form-control" }}
+
+            {% if field.errors %}
+              <div class="form-text text-danger">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="d-grid">
+          <button type="submit" class="btn btn-success">✅ Confirm Booking</button>
+        </div>
+      </form>
+
+      <div class="text-center mt-3">
+        <a href="{% url 'travel_list' %}" class="text-decoration-none">← Back to Travel List</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

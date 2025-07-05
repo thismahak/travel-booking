@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load form_filters %}
+
+{% block title %}Profile - Travel Booking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-sm border-0 p-4 bg-white">
+      <h2 class="mb-4 text-center text-primary">👤 Manage Your Profile</h2>
+
+      <!--  Profile Form -->
+      <form method="POST" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field|add_class:"form-control" }}
+            {% if field.errors %}
+              <div class="form-text text-danger">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary w-100">💾 Save Changes</button>
+      </form>
+
+      <!--  Action Links -->
+      <div class="text-center mt-4">
+        <a href="/" class="text-decoration-none me-2">🏠 Home</a> |
+        <a href="{% url 'travel_list' %}" class="text-decoration-none mx-2">🧭 Browse Travels</a> |
+        <form method="POST" action="{% url 'logout' %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none">🚪 Logout</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

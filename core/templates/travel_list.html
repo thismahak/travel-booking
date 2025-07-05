@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Available Travels{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">🧳 Available Travel Options</h2>
+
+  <!--  Filter Form -->
+  <form method="get" class="row g-2 mb-4 shadow-sm p-3 rounded bg-light">
+    <div class="col-md-3">
+      <input type="text" name="source" placeholder="Source" class="form-control" value="{{ request.GET.source }}">
+    </div>
+    <div class="col-md-3">
+      <input type="text" name="destination" placeholder="Destination" class="form-control" value="{{ request.GET.destination }}">
+    </div>
+    <div class="col-md-3">
+      <select name="type" class="form-select">
+        <option value="">All Types</option>
+        <option value="Flight" {% if request.GET.type == "Flight" %}selected{% endif %}>✈️ Flight</option>
+        <option value="Train" {% if request.GET.type == "Train" %}selected{% endif %}>🚆 Train</option>
+        <option value="Bus" {% if request.GET.type == "Bus" %}selected{% endif %}>🚌 Bus</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <button class="btn btn-primary w-100">🔍 Filter</button>
+    </div>
+  </form>
+
+  <!--  Results Table -->
+  {% if travels %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+        <thead class="table-info">
+          <tr>
+            <th>Type</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Date & Time</th>
+            <th>Price</th>
+            <th>Seats Left</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for travel in travels %}
+            <tr>
+              <td>
+                {% if travel.type == "Flight" %}✈️{% elif travel.type == "Train" %}🚆{% elif travel.type == "Bus" %}🚌{% endif %}
+                {{ travel.type }}
+              </td>
+              <td>{{ travel.source }}</td>
+              <td>{{ travel.destination }}</td>
+              <td>{{ travel.date_time|date:"M d, Y – h:i A" }}</td>
+              <td>₹{{ travel.price }}</td>
+              <td>{{ travel.available_seats }}</td>
+              <td>
+                <a href="{% url 'book_travel' travel.pk %}" class="btn btn-sm btn-success">Book</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center mt-4" role="alert">
+      😕 No travel options found. Try adjusting your filters.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookings{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center text-primary">🧾 My Bookings</h2>
+
+  {% if bookings %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+        <thead class="table-primary text-dark">
+          <tr>
+            <th>Type</th>
+            <th>Route</th>
+            <th>Date & Time</th>
+            <th>Seats</th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Booked On</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.travel.type|title }}</td>
+            <td>{{ booking.travel.source }} → {{ booking.travel.destination }}</td>
+            <td>{{ booking.travel.date_time|date:"M d, Y – h:i A" }}</td>
+            <td>{{ booking.seats }}</td>
+            <td>₹{{ booking.total_price }}</td>
+            <td>
+              {% if booking.status == "Cancelled" %}
+                <span class="badge bg-danger">Cancelled</span>
+              {% elif booking.travel.date_time < now %}
+                <span class="badge bg-secondary">Past</span>
+              {% else %}
+                <span class="badge bg-success">Confirmed</span>
+              {% endif %}
+            </td>
+            <td>{{ booking.booked_at|date:"M d, Y – h:i A" }}</td>
+            <td>
+              {% if booking.status == "Confirmed" and booking.travel.date_time > now %}
+                <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center shadow-sm">
+      🚫 You have no bookings yet.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}
