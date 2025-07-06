@@ -1,6 +1,3 @@
-Here's your **final improved `README.md`**, tailored to **local development only** (since you're not deploying due to MySQL and Railway limitations):
-
----
 
 ````markdown
 # ✈️ Travel Booking
