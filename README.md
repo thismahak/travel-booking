@@ -151,17 +151,7 @@ For queries or suggestions, reach out via [GitHub Issues](https://github.com/thi
 
 ## 📸 Screenshots
 
-### 🏠 Home Page
-![Home](screenshots/home_page.png)
-
-### 👤 Profile Page
-![Profile](screenshots/profile_page.png)
-
-### 🧾 Booking List
-![Bookings](screenshots/bookings_page.png)
-
-### 🎟️ Book Travel Page
-![Book Travel](screenshots/travel_list.png)
+You can see them in travel-booking/screenshots/
 
 
 
