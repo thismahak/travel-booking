@@ -1,59 +1,77 @@
-
-
 {% extends "base.html" %}
 {% load widget_tweaks %}
+
 {% block title %}Book Travel{% endblock %}
 
 {% block content %}
+<style>
+  .booking-summary li {
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+  }
+  .booking-summary strong {
+    color: #0d6efd;
+  }
+</style>
+
 <div class="row justify-content-center mt-5">
   <div class="col-md-8 col-lg-6">
-    <div class="card shadow border-0 p-4 bg-white">
-      <h3 class="mb-4 text-center text-primary">🎟️ Confirm Your Booking</h3>
+    <div class="card shadow border-0 p-4 bg-white rounded-3">
+      <h3 class="mb-4 text-center text-primary fw-bold">🎟️ Confirm Your Booking</h3>
 
-      <!--  Travel Summary -->
-      <ul class="list-group list-group-flush mb-4">
+      <!-- Travel Details Summary -->
+      <ul class="list-group list-group-flush mb-4 booking-summary">
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>Type:</strong></span> <span>{{ travel.type }}</span>
+          <span><strong>Type</strong></span> 
+          <span>{{ travel.type }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>From:</strong> {{ travel.source }}</span>
-          <span><strong>To:</strong> {{ travel.destination }}</span>
+          <span><strong>From</strong></span> 
+          <span>{{ travel.source }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>Date & Time:</strong></span> 
+          <span><strong>To</strong></span> 
+          <span>{{ travel.destination }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <span><strong>Date & Time</strong></span> 
           <span>{{ travel.date_time|date:"M d, Y – h:i A" }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>Price per Seat:</strong></span> 
+          <span><strong>Price/Seat</strong></span> 
           <span>₹{{ travel.price }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between">
-          <span><strong>Available Seats:</strong></span> 
+          <span><strong>Available Seats</strong></span> 
           <span>{{ travel.available_seats }}</span>
         </li>
       </ul>
 
-      <!--  Booking Form -->
+      <!-- Booking Form -->
       <form method="POST" novalidate>
         {% csrf_token %}
         {% for field in form %}
           <div class="mb-3">
-            <label class="form-label">{{ field.label }}</label>
-           {{ field|add_class:"form-control" }}
-
+            <label class="form-label fw-semibold">{{ field.label }}</label>
+            {{ field|add_class:"form-control" }}
             {% if field.errors %}
               <div class="form-text text-danger">{{ field.errors|striptags }}</div>
             {% endif %}
           </div>
         {% endfor %}
-
+        
         <div class="d-grid">
-          <button type="submit" class="btn btn-success">✅ Confirm Booking</button>
+          <button type="submit" class="btn btn-success fw-semibold py-2" title="Click to confirm booking">
+            ✅ Confirm Booking
+          </button>
         </div>
       </form>
 
-      <div class="text-center mt-3">
-        <a href="{% url 'travel_list' %}" class="text-decoration-none">← Back to Travel List</a>
+      <!-- Back Link -->
+      <div class="text-center mt-4">
+        <a href="{% url 'travel_list' %}" class="text-decoration-none text-secondary" title="Back to travel list">
+          ← Back to Travel List
+        </a>
       </div>
     </div>
   </div>

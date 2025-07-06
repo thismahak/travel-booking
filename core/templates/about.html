@@ -3,25 +3,69 @@
 {% block title %}About - Travel Booking{% endblock %}
 
 {% block content %}
-<div class="container my-5">
-  <h2 class="text-center mb-4 text-primary">🌍 About Travel Booking</h2>
+<style>
+  .about-section {
+    animation: fadeInUp 0.8s ease-out both;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .about-feature-list .list-group-item {
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: transparent;
+    font-weight: 500;
+  }
+
+  .about-feature-list .list-group-item::before {
+    content: "✔️";
+    margin-right: 0.5rem;
+    color: #0d6efd;
+  }
+
+  .about-text p {
+    font-size: 1.1rem;
+    color: #495057;
+  }
+
+  .about-image {
+    border-radius: 1rem;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08);
+  }
+</style>
+
+<div class="container my-5 about-section">
+  <h2 class="text-center mb-4 text-primary fw-bold">🌍 About Travel Booking</h2>
 
   <div class="row align-items-center">
-    <div class="col-md-6 mb-4">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Travel" class="img-fluid rounded shadow">
+    <div class="col-md-6 mb-4 mb-md-0">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Travel" class="img-fluid about-image">
     </div>
-    <div class="col-md-6">
-      <p class="lead">
-        <strong>Travel Booking</strong> is your go-to platform for planning and booking your journeys with confidence. Whether it's a quick weekend getaway or a long international trip, we offer:
+
+    <div class="col-md-6 about-text">
+      <p class="lead mb-3">
+        <strong>Travel Booking</strong> is your trusted companion for planning and booking journeys across the globe. Whether it’s a short escape or a dream vacation, we help you:
       </p>
-      <ul class="list-group list-group-flush mb-3">
-        <li class="list-group-item">✈️ Seamless booking for flights, trains, and buses</li>
-        <li class="list-group-item">💳 Secure and trusted payment gateways</li>
-        <li class="list-group-item">📍 Personalized travel recommendations</li>
-        <li class="list-group-item">📞 24/7 customer support</li>
+
+      <ul class="list-group list-group-flush about-feature-list mb-4">
+        <li class="list-group-item">Seamlessly book flights, trains, and buses</li>
+        <li class="list-group-item">Make secure payments via trusted gateways</li>
+        <li class="list-group-item">Get AI-powered recommendations for your trip</li>
+        <li class="list-group-item">Access 24/7 live customer support</li>
       </ul>
-      <p class="text-muted">
-        Our mission is to make travel planning simple, enjoyable, and accessible for everyone.
+
+      <p class="text-muted fst-italic">
+        Our mission is simple: to make travel easy, affordable, and joyful — for everyone, everywhere.
       </p>
     </div>
   </div>

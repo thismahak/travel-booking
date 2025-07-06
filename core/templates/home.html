@@ -4,60 +4,68 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero rounded shadow text-center p-5 bg-primary text-white mb-5">
-  <h1 class="display-4 fw-bold">Explore. Book. Travel.</h1>
-  <p class="lead mt-3 mb-4">Your journey starts here – book flights, trains, or buses effortlessly.</p>
+<section class="hero rounded shadow text-white text-center p-5 mb-5 position-relative" style="background: url('https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=1470&q=80') center/cover no-repeat;">
+  <div class="bg-dark bg-opacity-50 p-5 rounded">
+    <h1 class="display-4 fw-bold">Explore. Book. Travel.</h1>
+    <p class="lead mt-3 mb-4">Your journey starts here – book flights, trains, or buses effortlessly.</p>
 
-  {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}" class="btn btn-light me-3 px-4">👤 Go to Profile</a>
-    <a href="{% url 'travel_list' %}" class="btn btn-outline-light px-4">📋 Browse Travels</a>
-    <form method="POST" action="{% url 'logout' %}" class="d-inline ms-2">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger px-4">Logout</button>
-    </form>
-  {% else %}
-    <a href="{% url 'register' %}" class="btn btn-light me-3 px-4">📝 Register</a>
-    <a href="{% url 'login' %}" class="btn btn-outline-light px-4">🔐 Login</a>
-  {% endif %}
+    {% if user.is_authenticated %}
+      <a href="{% url 'profile' %}" class="btn btn-light me-2 px-4" title="Your profile">👤 Profile</a>
+      <a href="{% url 'travel_list' %}" class="btn btn-outline-light px-4" title="Browse travel options">📋 Browse Travels</a>
+      <form method="POST" action="{% url 'logout' %}" class="d-inline ms-2">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger px-4">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'register' %}" class="btn btn-light me-2 px-4" title="Create account">📝 Register</a>
+      <a href="{% url 'login' %}" class="btn btn-outline-light px-4" title="Login to your account">🔐 Login</a>
+    {% endif %}
+  </div>
 </section>
 
 <!-- About Section -->
-<section class="about-section container my-5">
-  <h2 class="text-center mb-4">About Travel Booking</h2>
-  <p class="lead text-center text-secondary">
+<section class="container my-5">
+  <h2 class="text-center mb-4 fw-bold">About Travel Booking</h2>
+  <p class="lead text-center text-secondary px-md-5">
     Travel Booking is your one-stop platform for booking flights, trains, and buses with ease and confidence.
     We provide seamless booking experiences, secure payments, and round-the-clock customer support.
     Start your adventure with us today!
   </p>
 </section>
 
-<!-- Features / Services Section -->
-<section class="features-section bg-light py-5">
+<!-- Features Section -->
+<section class="bg-light py-5">
   <div class="container">
-    <h2 class="text-center mb-5">Why Choose Us?</h2>
+    <h2 class="text-center mb-5 fw-bold">Why Choose Us?</h2>
     <div class="row text-center">
       <div class="col-md-4 mb-4">
-        <div class="feature-icon fs-1 mb-3 text-primary">✈️</div>
-        <h5>Wide Range of Options</h5>
-        <p>Choose from hundreds of flights, trains, and bus routes across the globe.</p>
+        <div class="p-4 border rounded h-100 shadow-sm bg-white hover-shadow">
+          <div class="fs-1 mb-3 text-primary">✈️</div>
+          <h5 class="fw-semibold">Wide Range of Options</h5>
+          <p>Choose from hundreds of flights, trains, and bus routes across the globe.</p>
+        </div>
       </div>
       <div class="col-md-4 mb-4">
-        <div class="feature-icon fs-1 mb-3 text-primary">💳</div>
-        <h5>Secure Payments</h5>
-        <p>Our payment gateways are secure and trusted for hassle-free transactions.</p>
+        <div class="p-4 border rounded h-100 shadow-sm bg-white hover-shadow">
+          <div class="fs-1 mb-3 text-success">💳</div>
+          <h5 class="fw-semibold">Secure Payments</h5>
+          <p>Our trusted gateways ensure safe and smooth transactions every time.</p>
+        </div>
       </div>
       <div class="col-md-4 mb-4">
-        <div class="feature-icon fs-1 mb-3 text-primary">📞</div>
-        <h5>24/7 Support</h5>
-        <p>Need help? Our dedicated support team is available round the clock.</p>
+        <div class="p-4 border rounded h-100 shadow-sm bg-white hover-shadow">
+          <div class="fs-1 mb-3 text-info">📞</div>
+          <h5 class="fw-semibold">24/7 Support</h5>
+          <p>Need help? Our support team is available anytime to assist you.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Contact Section -->
-<section class="contact-section container my-5">
-  <h2 class="text-center mb-4">Get In Touch</h2>
+<section class="container my-5" id="contact">
+  <h2 class="text-center mb-4 fw-bold">Get In Touch</h2>
 
   {% if messages %}
     {% for message in messages %}
@@ -65,7 +73,7 @@
     {% endfor %}
   {% endif %}
 
-  <form method="POST" id="contact" action="{% url 'contact' %}" class="mx-auto" style="max-width: 600px;">
+  <form method="POST" action="{% url 'contact' %}" class="mx-auto shadow-sm p-4 bg-white rounded" style="max-width: 600px;">
     {% csrf_token %}
     <div class="mb-3">
       <label for="name" class="form-label">Name</label>
@@ -77,7 +85,7 @@
     </div>
     <div class="mb-3">
       <label for="message" class="form-label">Message</label>
-      <textarea id="message" name="message" rows="4" class="form-control" required placeholder="Your message"></textarea>
+      <textarea id="message" name="message" rows="4" class="form-control" required placeholder="Your message..."></textarea>
     </div>
     <button type="submit" class="btn btn-primary w-100">Send Message</button>
   </form>

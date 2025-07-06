@@ -6,8 +6,10 @@ from .models import TravelOption, Booking
 from .forms import BookingForm
 from django.db.models import Q
 from django.utils import timezone
-
-
+from django.db import transaction  
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
+from django.views.decorators.http import require_POST
 
 def home(request):
     return render(request, 'home.html')
@@ -41,7 +43,7 @@ def travel_list(request):
     destination = request.GET.get('destination')
     date = request.GET.get('date')
 
-    travels = TravelOption.objects.all()
+    travels = TravelOption.objects.filter(date_time__gte=timezone.now()).order_by('date_time')
 
     if travel_type:
         travels = travels.filter(type=travel_type)
@@ -57,37 +59,52 @@ def travel_list(request):
             pass  # silently ignore invalid date
 
 
+    paginator = Paginator(travels, 5)  # Show 5 travels per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'travels': travels
+        'travels': page_obj,
     }
     return render(request, 'travel_list.html', context)
 
+
+
+
 @login_required
 def book_travel(request, travel_id):
-    travel = TravelOption.objects.get(travel_id=travel_id)
-
     if request.method == 'POST':
-        form = BookingForm(request.POST)
-        if form.is_valid():
-            booking = form.save(commit=False)
-            booking.user = request.user
-            booking.travel = travel
-            booking.total_price = booking.seats * travel.price  # 💰 FIXED HERE
+        with transaction.atomic():
+            travel = TravelOption.objects.select_for_update().get(pk=travel_id)
 
-            if booking.seats <= travel.available_seats:
-                travel.available_seats -= booking.seats
-                travel.save()
-                booking.save()
-
-                messages.success(request, 'Booking successful!')
+            if travel.date_time < timezone.now():
+                messages.error(request, "❌ You cannot book a travel that has already passed.")
                 return redirect('travel_list')
-            else:
-                form.add_error('seats', 'Not enough seats available.')
+
+            form = BookingForm(request.POST)
+            if form.is_valid():
+                seats_requested = form.cleaned_data['seats']
+
+                travel.refresh_from_db()
+                if seats_requested > travel.available_seats:
+                    form.add_error('seats', 'Not enough seats available.')
+                else:
+                    booking = form.save(commit=False)
+                    booking.user = request.user
+                    booking.travel = travel
+                    booking.total_price = seats_requested * travel.price
+
+                    travel.available_seats -= seats_requested
+                    travel.save()
+                    booking.save()
+
+                    messages.success(request, 'Booking successful!')
+                    return redirect('travel_list')
     else:
+        travel = get_object_or_404(TravelOption, pk=travel_id)  # 🔁 No select_for_update on GET
         form = BookingForm()
 
     return render(request, 'book_travel.html', {'form': form, 'travel': travel})
-
 
 
 
@@ -97,6 +114,8 @@ def my_bookings(request):
     return render(request, 'my_bookings.html', {'bookings': bookings, 'now': timezone.now()})
 
 
+
+@require_POST  # 👈 ensures only POST allowed
 @login_required
 def cancel_booking(request, booking_id):
     booking = Booking.objects.get(pk=booking_id, user=request.user)
@@ -111,7 +130,6 @@ def cancel_booking(request, booking_id):
         messages.error(request, 'Booking cannot be cancelled.')
 
     return redirect('my_bookings')
-
 
 
 def contact(request):

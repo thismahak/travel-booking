@@ -4,32 +4,69 @@
 {% block title %}Register - Travel Booking{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm p-4 bg-white border-0">
-      <h2 class="mb-4 text-center text-primary">📝 Create an Account</h2>
+<style>
+  .register-card {
+    max-width: 540px;
+    width: 100%;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
 
-      <!--  Registration Form -->
-      <form method="POST" novalidate>
-        {% csrf_token %}
-        {% for field in form %}
-          <div class="mb-3">
-            <label class="form-label fw-semibold">{{ field.label }}</label>
-            {{ field|add_class:"form-control" }}
-            {% if field.errors %}
-              <div class="form-text text-danger">{{ field.errors|striptags }}</div>
-            {% endif %}
-          </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary w-100">🚀 Register</button>
-      </form>
+  .register-card h2 {
+    font-weight: 600;
+    color: #0d6efd;
+  }
 
-      <!-- 🔗 Login Link -->
-      <p class="text-center mt-3">
-        Already have an account?
-        <a href="/accounts/login/" class="text-decoration-none">🔐 Login here</a>
-      </p>
-    </div>
+  .register-card .btn {
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  .register-card a {
+    font-weight: 500;
+  }
+
+  .fade-slide-up {
+    animation: fadeSlideUp 0.6s ease-out both;
+  }
+
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="register-card fade-slide-up">
+    <h2 class="text-center mb-4">📝 Create an Account</h2>
+
+    <form method="POST" novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">{{ field.label }}</label>
+          {{ field|add_class:"form-control" }}
+          {% if field.errors %}
+            <div class="form-text text-danger">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary w-100" title="Click to register">🚀 Register</button>
+    </form>
+
+    <p class="text-center mt-4">
+      Already have an account?
+      <a href="{% url 'login' %}" class="text-decoration-none" title="Click to log in">🔐 Login here</a>
+    </p>
   </div>
 </div>
 {% endblock %}

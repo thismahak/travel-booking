@@ -5,11 +5,11 @@
 
 {% block content %}
 <div class="row justify-content-center">
-  <div class="col-md-6">
-    <div class="card shadow-sm border-0 p-4 bg-white">
-      <h2 class="mb-4 text-center text-primary">👤 Manage Your Profile</h2>
+  <div class="col-lg-6 col-md-8">
+    <div class="card shadow-sm border-0 p-4 bg-white rounded-4">
+      <h2 class="mb-4 text-center text-primary fw-bold">👤 Manage Your Profile</h2>
 
-      <!--  Profile Form -->
+      <!-- Profile Form -->
       <form method="POST" novalidate>
         {% csrf_token %}
         {% for field in form %}
@@ -21,16 +21,17 @@
             {% endif %}
           </div>
         {% endfor %}
-        <button type="submit" class="btn btn-primary w-100">💾 Save Changes</button>
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">💾 Save Changes</button>
       </form>
 
-      <!--  Action Links -->
-      <div class="text-center mt-4">
-        <a href="/" class="text-decoration-none me-2">🏠 Home</a> |
-        <a href="{% url 'travel_list' %}" class="text-decoration-none mx-2">🧭 Browse Travels</a> |
-        <form method="POST" action="{% url 'logout' %}" class="d-inline">
+      <!-- Action Links -->
+      <hr class="my-4" />
+      <div class="d-flex justify-content-between flex-wrap text-center">
+        <a href="/" class="text-decoration-none text-secondary mb-2" title="Go to Home">🏠 Home</a>
+        <a href="{% url 'travel_list' %}" class="text-decoration-none text-secondary mb-2" title="View Travels">🧭 Browse Travels</a>
+        <form method="POST" action="{% url 'logout' %}" class="d-inline-block mb-2">
           {% csrf_token %}
-          <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none">🚪 Logout</button>
+          <button type="submit" class="btn btn-link text-danger text-decoration-none px-0" title="Logout">🚪 Logout</button>
         </form>
       </div>
     </div>

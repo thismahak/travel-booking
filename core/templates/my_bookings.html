@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container mt-5">
-  <h2 class="mb-4 text-center text-primary">🧾 My Bookings</h2>
+  <h2 class="mb-4 text-center text-primary fw-bold">🧾 My Bookings</h2>
 
   {% if bookings %}
     <div class="table-responsive">
@@ -24,8 +24,14 @@
         <tbody>
           {% for booking in bookings %}
           <tr>
-            <td>{{ booking.travel.type|title }}</td>
-            <td>{{ booking.travel.source }} → {{ booking.travel.destination }}</td>
+            <td>
+              {% if booking.travel.type == "Flight" %}✈️{% elif booking.travel.type == "Train" %}🚆{% elif booking.travel.type == "Bus" %}🚌{% endif %}
+              {{ booking.travel.type|title }}
+            </td>
+            <td>
+              <span class="fw-semibold">{{ booking.travel.source }}</span> →
+              <span class="fw-semibold">{{ booking.travel.destination }}</span>
+            </td>
             <td>{{ booking.travel.date_time|date:"M d, Y – h:i A" }}</td>
             <td>{{ booking.seats }}</td>
             <td>₹{{ booking.total_price }}</td>
@@ -41,7 +47,10 @@
             <td>{{ booking.booked_at|date:"M d, Y – h:i A" }}</td>
             <td>
               {% if booking.status == "Confirmed" and booking.travel.date_time > now %}
-                <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-sm btn-outline-danger">Cancel</a>
+                <form method="POST" action="{% url 'cancel_booking' booking.booking_id %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-outline-danger" title="Cancel this booking">❌ Cancel</button>
+                </form>
               {% else %}
                 <span class="text-muted">—</span>
               {% endif %}
@@ -53,7 +62,7 @@
     </div>
   {% else %}
     <div class="alert alert-info text-center shadow-sm">
-      🚫 You have no bookings yet.
+      🚫 You haven’t made any bookings yet. <br> Start your journey <a href="{% url 'travel_list' %}" class="fw-semibold text-decoration-none">here</a>!
     </div>
   {% endif %}
 </div>

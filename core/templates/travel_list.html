@@ -3,11 +3,48 @@
 {% block title %}Available Travels{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4 text-center">🧳 Available Travel Options</h2>
+<style>
+  .filter-form .form-control,
+  .filter-form .form-select {
+    border-radius: 0.5rem;
+  }
 
-  <!--  Filter Form -->
-  <form method="get" class="row g-2 mb-4 shadow-sm p-3 rounded bg-light">
+  .filter-form .btn {
+    font-weight: 500;
+  }
+
+  .table thead th {
+    background-color: #e3f2fd;
+    font-weight: bold;
+    vertical-align: middle;
+  }
+
+  .table td {
+    vertical-align: middle;
+  }
+
+  .badge.bg-secondary {
+    font-size: 0.9rem;
+    padding: 0.45em 0.75em;
+  }
+
+  .pagination .page-link {
+    border-radius: 0.4rem;
+    color: #0d6efd;
+  }
+
+  .pagination .active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+  }
+</style>
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-center text-primary">🧳 Available Travel Options</h2>
+
+  <!-- Filter Form -->
+  <form method="get" class="row g-2 mb-4 shadow-sm p-3 rounded bg-light filter-form">
     <div class="col-md-3">
       <input type="text" name="source" placeholder="Source" class="form-control" value="{{ request.GET.source }}">
     </div>
@@ -23,14 +60,14 @@
       </select>
     </div>
     <div class="col-md-3">
-      <button class="btn btn-primary w-100">🔍 Filter</button>
+      <button class="btn btn-primary w-100" title="Click to filter results">🔍 Filter</button>
     </div>
   </form>
 
-  <!--  Results Table -->
+  <!-- Travel Results -->
   {% if travels %}
     <div class="table-responsive">
-      <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+      <table class="table table-bordered table-hover text-center shadow-sm">
         <thead class="table-info">
           <tr>
             <th>Type</th>
@@ -55,13 +92,55 @@
               <td>₹{{ travel.price }}</td>
               <td>{{ travel.available_seats }}</td>
               <td>
-                <a href="{% url 'book_travel' travel.pk %}" class="btn btn-sm btn-success">Book</a>
+                {% if travel.available_seats > 0 %}
+                  <a href="{% url 'book_travel' travel.pk %}" class="btn btn-sm btn-success">Book</a>
+                {% else %}
+                  <span class="badge bg-secondary">Full</span>
+                {% endif %}
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination -->
+    {% if travels.has_other_pages %}
+      <nav aria-label="Travel Pagination">
+        <ul class="pagination justify-content-center mt-4">
+          {% if travels.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if request.GET.source %}source={{ request.GET.source }}&{% endif %}
+                {% if request.GET.destination %}destination={{ request.GET.destination }}&{% endif %}
+                {% if request.GET.type %}type={{ request.GET.type }}&{% endif %}
+                page={{ travels.previous_page_number }}" title="Previous Page">« Prev</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">« Prev</span></li>
+          {% endif %}
+
+          {% for num in travels.paginator.page_range %}
+            <li class="page-item {% if num == travels.number %}active{% endif %}">
+              <a class="page-link" href="?{% if request.GET.source %}source={{ request.GET.source }}&{% endif %}
+                {% if request.GET.destination %}destination={{ request.GET.destination }}&{% endif %}
+                {% if request.GET.type %}type={{ request.GET.type }}&{% endif %}
+                page={{ num }}">{{ num }}</a>
+            </li>
+          {% endfor %}
+
+          {% if travels.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if request.GET.source %}source={{ request.GET.source }}&{% endif %}
+                {% if request.GET.destination %}destination={{ request.GET.destination }}&{% endif %}
+                {% if request.GET.type %}type={{ request.GET.type }}&{% endif %}
+                page={{ travels.next_page_number }}" title="Next Page">Next »</a>
+            </li>
+          {% else %}
+            <li class="page-item disabled"><span class="page-link">Next »</span></li>
+          {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
   {% else %}
     <div class="alert alert-warning text-center mt-4" role="alert">
       😕 No travel options found. Try adjusting your filters.
