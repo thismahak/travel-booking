@@ -51,7 +51,7 @@
     <div class="col-md-3">
       <input type="text" name="destination" placeholder="Destination" class="form-control" value="{{ request.GET.destination }}">
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
       <select name="type" class="form-select">
         <option value="">All Types</option>
         <option value="Flight" {% if request.GET.type == "Flight" %}selected{% endif %}>✈️ Flight</option>
@@ -59,7 +59,11 @@
         <option value="Bus" {% if request.GET.type == "Bus" %}selected{% endif %}>🚌 Bus</option>
       </select>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
+  <input type="date" name="date" class="form-control" value="{{ request.GET.date }}">
+</div>
+
+    <div class="col-md-2">
       <button class="btn btn-primary w-100" title="Click to filter results">🔍 Filter</button>
     </div>
   </form>
